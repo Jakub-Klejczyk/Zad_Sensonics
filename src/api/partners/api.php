@@ -1,31 +1,23 @@
 <?php
-include "./config.php";
+include "../config.php";
+include "../headers.php";
 
-if (isset($_SERVER['HTTP_ORIGIN'])) {
-	header('Access-Control-Allow-Origin: *');
-	header('Access-Control-Allow-Credentials: true');
-	header('Access-Control-Max-Age: 1000');
-}
-if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-	if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'])) {
-			header("Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE");
-	}
-
-	if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'])) {
-			header("Access-Control-Allow-Headers: Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization");
-	}
-	exit(0);
-}
 
 
 $action='';
+$id='';
 
 if (isset($_GET['action'])) {
 	
 	$action=$_GET['action'];
 }
 
-if ($action=='loaddata') {
+if (isset($_GET['id'])) {
+	
+	$id=$_GET['id'];
+}
+
+if ($action=='loadpartners') {
 	
 	$stmt = $pdo->query('SELECT * FROM partners');
     $response = array();
@@ -36,7 +28,7 @@ if ($action=='loaddata') {
  }
 
 if ($action=='addpartner') {
-    print_r($_POST);
+    
     $nazwa = $_POST['nazwa'];
     $nip = intval($_POST['nip']);
     $adres = $_POST['adres'];
@@ -50,6 +42,24 @@ if ($action=='addpartner') {
     
 }
 
+if ($action=='deletepartner') {
+    $sql = 'DELETE FROM partners WHERE id = :id';
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute(['id' => $id]);
+}
+
+if ($action=='editpartner') {
+    $nazwa = $_POST['nazwa'];
+    $nip = intval($_POST['nip']);
+    $adres = $_POST['adres'];
+    $telefon = intval($_POST['telefon']);
+    $mail = $_POST['mail'];
+
+    $sql = 'UPDATE partners SET nazwa = :nazwa, nip = :nip, adres = :adres, telefon = :telefon, mail = :mail WHERE id = :id';
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute(['id' => $id, 'nazwa' => $nazwa, 'nip' => $nip, 'adres' => $adres, 'telefon' => $telefon, 'mail' => $mail]);
+
+}
 
 
 

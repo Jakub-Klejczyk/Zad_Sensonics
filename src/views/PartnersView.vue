@@ -1,6 +1,6 @@
 <script>
 import axios from "axios";
-import Table from "../components/Table.vue";
+import TablePartners from "../components/TablePartners.vue";
 
 export default {
   data() {
@@ -12,15 +12,19 @@ export default {
         telefon: "",
         mail: "",
         nip: "",
+        id: "",
       },
+      error: "",
+      title: "Dodaj kontrahenta",
+      editMode: false,
     };
   },
-  components: { Table },
+  components: { TablePartners },
   methods: {
     async fetchPartners() {
       await axios({
         method: "get",
-        url: "http://localhost/zad/sensonics/src/api/api.php?action=loaddata",
+        url: "http://localhost/sensonics/src/api/partners/api.php?action=loadpartners",
       })
         .then((res) => {
           this.partners = res.data;
@@ -29,14 +33,14 @@ export default {
           console.log(err.message);
         });
     },
-    onSubmit() {
+    async onSubmit() {
       if (this.validateForm()) {
-        axios({
+        await axios({
           method: "post",
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
           },
-          url: "http://localhost/zad/sensonics/src/api/api.php?action=addpartner",
+          url: "http://localhost/sensonics/src/api/partners/api.php?action=addpartner",
           data: this.partner,
         })
           .then((res) => {
@@ -46,12 +50,94 @@ export default {
             console.log(err.message);
           });
       }
-      console.log(this.partner);
+
+      this.fetchPartners();
+      this.clearForm();
+    },
+    async onDelete(id) {
+      await axios
+        .delete(
+          `http://localhost/sensonics/src/api/partners/api.php?action=deletepartner&id=${id}`
+        )
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
+      this.fetchPartners();
+    },
+    onEdit(data) {
+      (this.partner.nazwa = data.nazwa),
+        (this.partner.adres = data.adres),
+        (this.partner.telefon = data.telefon.toString()),
+        (this.partner.mail = data.mail),
+        (this.partner.nip = data.nip.toString());
+      this.partner.id = data.id.toString();
+
+      this.editMode = true;
+      this.title = "Edytuj kontrahenta";
+    },
+    async editPartner() {
+      if (this.validateForm()) {
+        await axios({
+          method: "post",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          url: `http://localhost/sensonics/src/api/partners/api.php?action=editpartner&id=${this.partner.id}`,
+          data: this.partner,
+        })
+          .then((res) => {
+            console.log(res.data);
+          })
+          .catch((err) => {
+            console.log(err.message);
+          });
+      }
+      this.editMode = false;
+      this.title = "Dodaj kontrahenta";
       this.fetchPartners();
       this.clearForm();
     },
     validateForm() {
-      return false;
+      this.error = "";
+      setTimeout(() => {
+        this.error = "";
+      }, 5000);
+
+      if (
+        !this.partner.nazwa ||
+        !this.partner.adres ||
+        !this.partner.telefon ||
+        !this.partner.mail ||
+        !this.partner.nip
+      ) {
+        this.error = "Nie wszystkie pola zostały uzupełnione.";
+        return false;
+      }
+      if (
+        !this.partner.mail.match(
+          /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        )
+      ) {
+        this.error = "Niepoprawny adres email.";
+        return false;
+      }
+      if (
+        !this.partner.telefon.match(
+          /\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{3})/
+        )
+      ) {
+        this.error = "Niepoprawny numer telefonu.";
+        return false;
+      }
+      if (!this.partner.nip.match(/^[0-9]{10}$/)) {
+        this.error = "Niepoprawny numer NIP.";
+        return false;
+      }
+
+      return true;
     },
     clearForm() {
       (this.partner.nazwa = ""),
@@ -69,9 +155,12 @@ export default {
 
 <template>
   <div>
-    <Table :data="partners" />
-    <form action="" @submit.prevent="onSubmit">
-      <h3>Dodaj kontrahenta</h3>
+    <TablePartners @delete="onDelete" @edit="onEdit" :data="partners" />
+    <form
+      action=""
+      @submit.prevent="!this.editMode ? onSubmit() : editPartner()"
+    >
+      <h3>{{ title }}</h3>
       <div class="form-elem">
         <label for="nazwa">Nazwa:</label>
         <input
@@ -117,8 +206,9 @@ export default {
           autocomplete="disable"
         />
       </div>
+      <p>{{ error }}</p>
       <div class="form-elem">
-        <input type="submit" value="Dodaj kontrahenta" />
+        <input class="submit" type="submit" value="Wyślij" />
       </div>
     </form>
   </div>
@@ -126,10 +216,5 @@ export default {
 
 <style lang="scss" scoped>
 @import "../assets/main.scss";
-
-form {
-  margin: 0 auto;
-  width: 400px;
-  background-color: red;
-}
+@include form;
 </style>

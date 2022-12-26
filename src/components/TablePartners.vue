@@ -6,7 +6,15 @@ export default {
   data() {
     return {};
   },
-  name: "Table",
+  methods: {
+    emitId(id) {
+      this.$emit("delete", id);
+    },
+    emitData(data) {
+      this.$emit("edit", data);
+    },
+  },
+  name: "TablePartners",
 };
 </script>
 
@@ -18,29 +26,14 @@ export default {
       <p>tel.: {{ partner.telefon }}</p>
       <p>{{ partner.mail }}</p>
       <p>NIP: {{ partner.nip }}</p>
-      <button>Edytuj</button>
-      <button>Usuń</button>
+      <button @click="emitData(partner)">Edytuj</button>
+      <button @click="emitId(partner.id)">Usuń</button>
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
 @import "../assets/main.scss";
-.container {
-  margin: 2rem auto;
-  width: 1400px;
 
-  .elem {
-    padding-inline: 1rem;
-    border: 2px solid $green;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 60px;
-    margin-bottom: 1rem;
-    button {
-      @include btn;
-    }
-  }
-}
+@include table(1400px, 1000px, 600px, 350px, 160px);
 </style>
