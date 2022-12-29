@@ -19,7 +19,7 @@ if (isset($_GET['id'])) {
 
 if ($action=='loadpartners') {
 	
-	$stmt = $pdo->query('SELECT * FROM partners');
+	$stmt = $pdo->query('SELECT * FROM partners ORDER BY id ASC');
     $response = array();
     while($row = $stmt->fetch()) {
         array_push($response, ["id" => $row['id'], "nazwa" => $row['nazwa'], "nip" => $row['nip'], "adres" => $row['adres'], "telefon" => $row['telefon'], "mail" => $row['mail']]);

@@ -66,10 +66,10 @@ export default {
       this.fetchProducts();
     },
     onEdit(data) {
-      (this.product.nazwa = data.nazwa),
-        (this.product.cena = data.cena.toString()),
-        (this.product.symbol = data.symbol),
-        (this.product.id = data.id.toString());
+      this.product.nazwa = data.nazwa;
+      this.product.cena = data.cena.toString();
+      this.product.symbol = data.symbol;
+      this.product.id = data.id.toString();
       this.editMode = true;
       this.title = "Edytuj produkt";
     },
@@ -97,6 +97,7 @@ export default {
     },
     validateForm() {
       this.error = "";
+
       setTimeout(() => {
         this.error = "";
       }, 5000);
