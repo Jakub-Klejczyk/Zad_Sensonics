@@ -24,7 +24,7 @@ Dane konfiguracyjne bazy danych znajdują się w pliku config.php (src/api/confi
 
 Po zalogowaniu się do serwera w programie pgAdmin4 należy utworzyć nową baze danych o nazwie "zadanie".
 
-Po utworzeniu bazy, należy klinąć na nią prawym przyciskiem myszy oraz wybrać opcję "Resotre..."
+Po utworzeniu bazy, należy klinąć na nią prawym przyciskiem myszy oraz wybrać opcję "Restore..."
 
 W zakładce General należy wybrać w pozycji Filename plik "sql_custom".
 
@@ -34,9 +34,9 @@ Po zakończeniu ładowania pliku baza danych powinna zostać odtworzona.
 
 **XAMPP**
 
-W celu obsługi PHP należy skorzystać z servera dostępnego w ramach programu XAMPP.
+W celu obsługi PHP należy skorzystać z serwera dostępnego w ramach programu XAMPP.
 
-Należy odnaleźć folder htdocs.
+Należy odnaleźć folder htdocs na komputerze.
 
 Przykładowa ścieżka:
 D:\xampp\htdocs
@@ -65,4 +65,4 @@ oraz
 npm run dev
 ```
 
-Po otwarciu servera testowego powinna uruchomić się aplikacja.
+Po otwarciu serwera testowego powinna uruchomić się aplikacja.
