@@ -18,6 +18,8 @@ sql_script - skryp do wglądu przez rekrutera.
 
 sql_custom - skrypt, z którego odtwarzana będzie baza danych.
 
+Dane konfiguracyjne bazy danych znajdują się w pliku config.php (src/api/config.php).
+
 Po zalogowaniu się do serwera w programie pgAdmin4 należy utworzyć nową baze danych o nazwie "zadanie".
 
 Po utworzeniu bazy, należy klinąć na nią prawym przyciskiem myszy oraz wybrać opcję "Resotre..."
