@@ -6,6 +6,8 @@ Aplikacja umożliwia:
 - podgląd oraz dokonywanie operacji na bazie towarów
 - podgląd oraz dokonywanie operacji na bazie faktur
 
+Wideo poglądowe aplikacji: https://www.youtube.com/watch?v=emetcDepSJw&ab_channel=JakubKlejczyk
+
 ## Uruchomienie projektu
 
 ### Obsługa bazy danych
